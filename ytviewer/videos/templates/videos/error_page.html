@@ -1,0 +1,13 @@
+{% extends 'parts/base.html' %}
+
+{% block content %}
+    <div class="center-box">
+        <h2>Oops!</h2>
+        {% for error in errors %}
+            <p>{{error}}</p>
+        {% endfor %}
+        <a class='button' href="{% url 'index_page' %}">Go Back</a>
+    </div>
+{% endblock content %}
+        
+

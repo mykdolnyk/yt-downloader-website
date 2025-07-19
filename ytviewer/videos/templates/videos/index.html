@@ -1,0 +1,16 @@
+{% extends 'parts/base.html' %}
+
+{% block content %}
+    <div class="center-box">
+        <div class="video-query-box">
+            <h2>Enter the URL here:</h2>
+            <form action="video" method="get">
+                <input type="text" name="video_url" id="video_url">
+                <input type="submit" value="Go">
+            </form>
+            <p>Note: it might take some time for the video to load.</p>
+        </div>
+    </div>
+{% endblock content %}
+        
+

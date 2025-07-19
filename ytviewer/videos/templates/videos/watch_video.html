@@ -1,0 +1,13 @@
+{% extends 'parts/base.html' %}
+
+{% block content %}
+    <div class="center-box">
+        <h2>Here is your video!</h2>
+        <video controls>
+            <source src="{{video.file.url}}">
+        </video>
+        <h2>{{video.title}}</h2>
+        <a class='button' href="{{video.file.url}}" download class="download-btn">Download Video</a>
+    </div>
+    
+{% endblock content %}
