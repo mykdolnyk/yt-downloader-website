@@ -1,13 +1,16 @@
 import os
 from django.conf import settings
 import yt_dlp
+import datetime
+from django.utils import timezone
 
 def download_video(video_id:str) -> dict:
     """Downloads the video and returns information about it."""
     # Define download options
     ydl_options = {
         'format': 'bestvideo[height<=1080]+bestaudio/best[height<=1080]',
-        'outtmpl': f'ytviewer/media/videos/{video_id}.%(ext)s',
+        'outtmpl': f'{settings.MEDIA_ROOT}/videos/{video_id}.%(ext)s',
+        'merge_output_format': 'mp4',
     }
 
     # Download the video and get the details
@@ -16,10 +19,15 @@ def download_video(video_id:str) -> dict:
         full_video_filepath = ydl.prepare_filename(video_info)
         rel_video_filepath = os.path.relpath(full_video_filepath, settings.MEDIA_ROOT)
     
-        video_title = video_info.get('title')
-    
     return {
         'success': True,
-        'title': video_title,
-        'filepath': rel_video_filepath
+        'title': video_info.get('title'),
+        'description': video_info.get('description'),
+        'filepath': rel_video_filepath,
+        'creation_date': timezone.make_aware(datetime.datetime.fromtimestamp(video_info.get('timestamp'))),
+        'view_count': video_info.get('view_count'),
+        'like_count': video_info.get('like_count'),
+        'availability': video_info.get('availability'),
+        'channel': video_info.get('channel'),
+        'channel_url': video_info.get('channel_url'),
     }

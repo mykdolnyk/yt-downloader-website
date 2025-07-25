@@ -1,24 +1,13 @@
-@import url('fonts.css');
+@import url(fonts.css);
+@import url(vars.css);
+@import url(header.css);
+@import url(background-pattern.css);
 @import url('https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 body {
     margin: 0%;
     font-family: "Funnel Sans", sans-serif;
-}
-
-header {
-    background-color: #7187a9;
-    box-shadow: rgba(0, 0, 0, 0.47) 0px 5px 2px;
-    border-radius: 0 0 15px 15px ;
-
-    height: 75px;
-
-    display: flex;
-    align-items: center;
-
-    box-sizing: border-box;
-    /* padding: 10px; */
-
+    color: var(--dark-text-color);
 }
 
 .center-box {
@@ -26,7 +15,10 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    gap: 20px;
+
+    padding: 20px 20px;
+    box-sizing: border-box;
 }
 
 .video-query-box {
@@ -40,10 +32,16 @@ header {
     padding: 20px;
     font-size: large;
 
-    background-color: #cdd5ff;
+    background-color: #cadaf3;
     border-radius: 10px;
 
+    /* color: rgb(42, 51, 81); */
+    color: var(--dark-text-color);
+
     width: fit-content;
+
+    box-shadow: rgba(0, 0, 0, 0.226) 0px 0px 1em,
+                rgba(0, 0, 0, 0.226) 0px 0px 5px;
 }
 
 .video-query-box h2 {
@@ -56,6 +54,9 @@ header {
     padding: 10px;
 
     border-radius: 10px;
+
+    color: var(--dark-text-color);
+    border-color: var(--dark-text-color);
 }
 
 video {
@@ -65,32 +66,79 @@ video {
     border-radius: 5px;
 }
 
-.logo-text {
-    margin-left: 20px;
-
-    font-family: 'Haettenschweiler', sans-serif;
-    font-size: 3.5em;
-    color: #d1e7fd;
-    text-shadow: black 1px 1px 0px, 
-                 black -1px 1px 0px,
-                 black 1px -1px 0px, 
-                 black -1px -1px 0px;
-    letter-spacing: 2px;
-    text-decoration: none;
-
-    display: block;
-    width: fit-content;
-
-    text-align: center;
-}
-
-.button {
-    padding: 10px;
+.button, .text-window a.button {
+    padding: 5px 10px;
     border: solid #cdd5ff 1px;
     background-color: #7187a9;
     border-radius: 5px;
 
     text-decoration: none;
-    color: #cdd5ff;
+    color: var(--light-text-color);
+    
     font-weight: 500;
 }
+
+.result-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.fade-opacity {
+    transition: opacity 0.25s ease;
+}
+
+#result-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#throbber {
+    height: 200px;
+    width: 200px;
+}
+
+.text-window {
+    padding: 20px;
+    font-size: large;
+
+    background-color: #d2ddf3;
+
+    border-radius: 10px;
+
+    width: fit-content;
+
+    box-shadow: rgba(0, 0, 0, 0.226) 0px 0px 1em,
+                rgba(0, 0, 0, 0.226) 0px 0px 5px;
+}
+
+.text-window a {
+    color: rgb(25, 121, 194);
+}
+
+/* Video Page */
+
+.video-details {
+    display: grid;
+    justify-content: space-between;
+    gap: 200px;
+
+    grid-template-columns: auto auto;
+}
+
+.description {
+    white-space: pre-line;
+}
+
+details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+summary {
+    width: fit-content;
+}
+

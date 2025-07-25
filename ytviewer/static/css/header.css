@@ -1,0 +1,56 @@
+@import url(vars.css);
+
+header {
+    background-color: var(--header-color);
+    box-shadow: rgba(0, 0, 0, 0.279) 0px 5px 5px;
+    border-radius: 0 0 15px 15px ;
+
+    height: 75px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0px 30px;
+
+    box-sizing: border-box;
+}
+
+header a {
+    color: var(--light-text-color);
+    text-decoration: none;
+    transition: color 0.5s, text-shadow 0.5s;
+}
+
+header a:hover {
+    color: whitesmoke;
+    text-shadow: var(--light-text-color) 0 0 1px;
+    text-decoration: none;
+    transition: color 0.5s, text-shadow 0.5s;;
+}
+
+header a img {
+    transition: filter 0.3s;
+    user-select: none;
+}
+
+header a img:hover {
+    filter: drop-shadow(0px 0px 2px whitesmoke);
+    transition: filter 0.3s;
+}
+
+.logo-text {
+    font-family: 'Haettenschweiler', sans-serif;
+    font-size: 3em;
+    color: var(--light-text-color);
+    text-shadow: rgb(0, 55, 138) 0px 0px 2px;
+    letter-spacing: 3px;
+    text-decoration: none;
+
+    display: block;
+    width: fit-content;
+
+    text-align: center;
+
+    user-select: none;
+}

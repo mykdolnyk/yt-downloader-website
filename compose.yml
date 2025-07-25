@@ -1,13 +1,43 @@
 services:
   web:
     build: .
-    command: sh -c "python ytviewer/manage.py runserver 0.0.0.0:8000"
+    working_dir: /app/ytviewer
+    command: gunicorn ytviewer.wsgi:application --bind 0.0.0.0:8000 --workers=3
     volumes:
       - .:/app
-    ports: 
-      - "8000:8000"
+    expose:
+      - '8000'
+    env_file:
+      - test.env
+
+  celery-worker:
+    build: .
+    working_dir: /app/ytviewer
+    command: celery -A ytviewer worker -l info
+    entrypoint: ""
+    volumes:
+      - .:/app
+    env_file:
+      - test.env
+    depends_on:
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:4-management
+    expose:
+      - "5672"
+      - "15672"
+    env_file:
+      - test.env
 
   nginx:
     image: nginx:latest
     ports:
-      -"80:8001"
+      - "80:80"
+    volumes: 
+      - ./nginx/default.conf:/etc/nginx/nginx.conf:ro
+      - .:/app
+    depends_on:
+      - web
+    env_file:
+      - test.env

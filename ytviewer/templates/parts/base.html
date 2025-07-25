@@ -6,13 +6,17 @@
     <title>DeTuber Viewer</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
 </head>
-<body>
+<body class="bg-pattern">
     <header>
         <a href="{% url 'index_page' %}" class='logo-text'>DeTuber</a>
+        <a href="{{github_repo_url}}"><img src="{% static 'images/github-mark-white.svg' %}" style="height: 45px;"></a>
     </header>
     <main>
         {% block content %}{% endblock content %}
     </main>
+
+    {% block js %}{% endblock js %}
 </body>
 </html>
