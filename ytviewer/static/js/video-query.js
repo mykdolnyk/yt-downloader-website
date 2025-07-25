@@ -5,37 +5,6 @@ const resultInfo = document.getElementById('result-info');
 
 const errorMessage = "<p>Something went wrong! Please double-check if the ID/URL you entered is correct.</p>"
 
-// goButton.addEventListener('click', function () {
-//     let userInput = textField.value;
-
-//     if (userInput == '') {
-//         return
-//     }
-
-//     textField.value = '';
-
-//     throbber.style.display = 'block';
-//     requestAnimationFrame(() => {
-//         throbber.style.opacity = 1;
-//     });
-
-//     finalRequestVideoUrl = `${requestVideoUrl}?video_url=${userInput}`;
-
-//     fetch(finalRequestVideoUrl)
-//     .then(response => response.json())
-//     .then(data => {
-//         if (data.success) {
-//             finalShowVideoUrl = `${showVideoUrl}?video_url=${data.id}`
-//             displayLoadingDone(`<p>Here is your video:</p> <a class="button result_url" href="${finalShowVideoUrl}">${data.title}</a>`);
-//         } else {
-//             displayLoadingDone(errorMessage);
-//         }
-//     })  
-//     .catch(error => {
-//         displayLoadingDone(errorMessage)
-//     });;
-// });
-
 goButton.addEventListener('click', async function () {
     let userInput = textField.value;
 
