@@ -5,10 +5,15 @@ services:
     command: gunicorn ytviewer.wsgi:application --bind 0.0.0.0:8000 --workers=3
     volumes:
       - .:/app
+      - static_volume:/app/ytviewer/staticfiles
+      - media_volume:/app/ytviewer/media
     expose:
       - '8000'
     env_file:
       - test.env
+    depends_on:
+      db:
+        condition: service_healthy
 
   celery-worker:
     build: .
@@ -17,10 +22,12 @@ services:
     entrypoint: ""
     volumes:
       - .:/app
+      - media_volume:/app/ytviewer/media
     env_file:
       - test.env
     depends_on:
       - rabbitmq
+      - db
 
   rabbitmq:
     image: rabbitmq:4-management
@@ -30,14 +37,33 @@ services:
     env_file:
       - test.env
 
+  db:
+    image: mysql:latest
+    volumes:
+      - mysql_data:/var/lib/mysql
+    env_file:
+      - test.env
+    healthcheck: 
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"] 
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
   nginx:
     image: nginx:latest
     ports:
       - "80:80"
     volumes: 
       - ./nginx/default.conf:/etc/nginx/nginx.conf:ro
-      - .:/app
+      - static_volume:/app/ytviewer/staticfiles
+      - media_volume:/app/ytviewer/media
     depends_on:
       - web
     env_file:
       - test.env
+
+volumes:
+  static_volume:
+  media_volume:
+  mysql_data:

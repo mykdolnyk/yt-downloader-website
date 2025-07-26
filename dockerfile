@@ -2,7 +2,15 @@ FROM python:3.12-slim
 EXPOSE 8000
 WORKDIR /app
 
-RUN apt update && apt install -y ffmpeg
+RUN apt update 
+# A tool for merging audio and video streams:
+RUN apt install -y ffmpeg  
+# Tools to set up the MySQL connection:
+RUN apt install -y build-essential
+RUN apt install -y pkg-config
+RUN apt install -y pkg-config libmariadb-dev
+# NetCat to postpone the start of the app until the db is running
+RUN apt install -y netcat-openbsd
 
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
