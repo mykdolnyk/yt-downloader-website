@@ -1,0 +1,84 @@
+services:
+  web:
+    build: .
+    working_dir: /app/ytviewer
+    command: gunicorn ytviewer.wsgi:application --bind 0.0.0.0:8000 --workers=3
+    volumes:
+      - .:/app
+      - static_volume:/app/ytviewer/staticfiles
+      - media_volume:/app/ytviewer/media
+    expose:
+      - '8000'
+    env_file:
+      - test.env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  celery-worker:
+    build: .
+    working_dir: /app/ytviewer
+    command: celery -A ytviewer worker -l info
+    entrypoint: ""
+    volumes:
+      - .:/app
+      - media_volume:/app/ytviewer/media
+    env_file:
+      - test.env
+    depends_on:
+      - rabbitmq
+      - db
+
+  rabbitmq:
+    image: rabbitmq:4-management
+    expose:
+      - "5672"
+      - "15672"
+    env_file:
+      - test.env
+
+  db:
+    image: mysql:latest
+    volumes:
+      - mysql_data:/var/lib/mysql
+    env_file:
+      - test.env
+    healthcheck: 
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"] 
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes: 
+      - ./nginx/default_ssl.conf:/etc/nginx/nginx.conf:ro
+      - static_volume:/app/ytviewer/staticfiles
+      - media_volume:/app/ytviewer/media
+      - certbot-var:/var/www/certbot
+      - certbot-etc:/etc/letsencrypt
+    depends_on:
+      - web
+    env_file:
+      - test.env
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/www/certbot
+    command: certonly --webroot -w /var/www/certbot -d %DOMAINNAME% --non-interactive --agree-tos -m %EMAIL%
+    # You should replace the $DOMAINNAME% and %EMAIL% with your real domain name and email
+    depends_on:
+      - nginx
+
+volumes:
+  static_volume:
+  media_volume:
+  mysql_data:
+  certbot-etc:
+  certbot-var:
