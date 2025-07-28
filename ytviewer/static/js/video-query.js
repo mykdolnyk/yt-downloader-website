@@ -25,7 +25,6 @@ goButton.addEventListener('click', async function () {
     try {
         response = await fetch(finalQueueVideoUrl)
         data = await response.json()
-        console.log(data)
         if (!data.success) {
             displayLoadingDone(errorMessage);
             return;
