@@ -11,6 +11,7 @@ def download_video(video_id:str) -> dict:
         'format': 'bestvideo[height<=1080]+bestaudio/best[height<=1080]',
         'outtmpl': f'{settings.MEDIA_ROOT}/videos/{video_id}.%(ext)s',
         'merge_output_format': 'mp4',
+        'cookiefile': os.getenv('YTDLP_COOKIEFILE_PATH'),
     }
 
     # Download the video and get the details
