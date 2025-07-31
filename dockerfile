@@ -9,6 +9,8 @@ RUN apt install -y ffmpeg
 RUN apt install -y build-essential
 RUN apt install -y pkg-config
 RUN apt install -y pkg-config libmariadb-dev
+# Installing Cron for scheduling
+RUN apt install -y cron
 # NetCat to postpone the start of the app until the db is running
 RUN apt install -y netcat-openbsd
 
@@ -17,6 +19,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+COPY cron/crontab /etc/cron.d/crontab
+RUN chmod 0644 /etc/cron.d/crontab
+
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+
 ENTRYPOINT [ "/entrypoint.sh" ]

@@ -7,6 +7,7 @@ services:
       - .:/app
       - static_volume:/app/ytviewer/staticfiles
       - media_volume:/app/ytviewer/media
+      - ./test.env:/app/active.env
     expose:
       - '8000'
     env_file:
