@@ -108,4 +108,67 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+
+    'formatters': {
+        'default': {
+            'format': '%(asctime)s - %(levelname)s in %(funcName)s, %(filename)s: %(message)s'
+        },
+        'verbose': {
+            'format': '%(asctime)s - %(levelname)s in %(funcName)s, %(pathname)s on line %(lineno)d by %(name)s: %(message)s'
+        }
+    },
+    
+    'filters': {
+        'info_only': {
+            '()': 'ytviewer.logging_filters.InfoOnlyFilter',
+        },
+        'exclude_unavailable_video': {
+            '()': 'ytviewer.logging_filters.ExcludeUnavailableVideoFilter'
+        }
+    },
+    
+    'handlers': {
+        'stdout': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'default'
+        },
+        'error_log': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'formatter': 'verbose',
+            'filename': '/var/log/ytviewer/error.log'
+        },
+        'info_log': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'formatter': 'verbose',
+            'filename': '/var/log/ytviewer/info.log',
+            'filters': ['info_only']
+        }
+    },
+    
+    'loggers': {
+        'videos.helpers.downloading': {
+            'handlers': ['error_log', 'info_log', 'stdout'],
+            'level': 'INFO',
+            'propagate': False,
+            'filters': ['exclude_unavailable_video']
+        },
+        'videos.tasks': {
+            'handlers': ['error_log', 'info_log', 'stdout'],
+            'level': 'INFO',
+            'propagate': False,
+        }
+    },
+    
+    'root': {
+        'handlers': ['stdout', 'error_log'],
+        'level': 'ERROR'
+    }
+}
+
 GITHUB_REPO_URL = 'https://github.com/mykdolnyk/yt-downloader-website'

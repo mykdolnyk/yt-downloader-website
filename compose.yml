@@ -5,9 +5,10 @@ services:
     command: gunicorn ytviewer.wsgi:application --bind 0.0.0.0:8000 --workers=3
     volumes:
       - .:/app
+      - ./test.env:/app/active.env
+      - ./logs/ytviewer:/var/log/ytviewer
       - static_volume:/app/ytviewer/staticfiles
       - media_volume:/app/ytviewer/media
-      - ./test.env:/app/active.env
     expose:
       - '8000'
     env_file:
@@ -23,6 +24,7 @@ services:
     entrypoint: ""
     volumes:
       - .:/app
+      - ./logs/ytviewer:/var/log/ytviewer
       - media_volume:/app/ytviewer/media
     env_file:
       - test.env
@@ -35,6 +37,8 @@ services:
     expose:
       - "5672"
       - "15672"
+    volumes:
+      - ./logs/rabbitmq:/var/log/rabbitmq
     env_file:
       - test.env
 
@@ -57,6 +61,7 @@ services:
       - "80:80"
     volumes: 
       - ./nginx/default.conf:/etc/nginx/nginx.conf:ro
+      - ./logs/nginx:/var/log/nginx
       - static_volume:/app/ytviewer/staticfiles
       - media_volume:/app/ytviewer/media
     depends_on:

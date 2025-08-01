@@ -2,16 +2,19 @@ from celery import shared_task
 from yt_dlp import DownloadError
 from .helpers import downloading
 from .models import Video, VideoStatus
-# from logging import ...
+from logging import getLogger
+
+
+task_logger = getLogger(__name__)
 
 
 @shared_task
 def download_video_task(video_id: str):
     try:
         video_object = Video.objects.get(ytid=video_id)
-    except Exception as exc:
-        # TODO: logger
-        raise exc
+    except Exception:
+        task_logger.exception(f'An error occured while trying to retrieve the YouTube Video object with {video_id} ID.')
+        raise
 
     try:
         video_details = downloading.download_video(video_id=video_id)
