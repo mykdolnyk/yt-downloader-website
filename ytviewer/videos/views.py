@@ -1,9 +1,7 @@
-import os
-from django.http import HttpResponse, HttpRequest, JsonResponse
-from django.shortcuts import redirect, render
+from django.http import HttpRequest, JsonResponse
+from django.shortcuts import render
 from .models import Video, VideoStatus
-from .helpers import url, video
-from yt_dlp import DownloadError
+from .helpers import url
 from .tasks import download_video_task
 
 
@@ -35,8 +33,6 @@ def show_video(request: HttpRequest):
 
     return render(request, 'videos/watch_video.html', context)
 
-# ---------------------- new code
-
 
 def queue_video(request: HttpRequest):
     """Starts the video downloading process."""
@@ -49,7 +45,6 @@ def queue_video(request: HttpRequest):
             return JsonResponse({'success': False,
                                  'errors': ['Something went wrong! Please double-check if the ID/URL you entered is correct.']})
 
-    # video_querylist, just_created = Video.objects.get_or_create(ytid=video_id)
     exists = Video.objects.filter(ytid=video_id).exists()
 
     if not exists:

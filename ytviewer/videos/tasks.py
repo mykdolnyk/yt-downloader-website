@@ -1,7 +1,6 @@
 from celery import shared_task
 from yt_dlp import DownloadError
-
-from .helpers import video
+from .helpers import downloading
 from .models import Video, VideoStatus
 # from logging import ...
 
@@ -15,7 +14,7 @@ def download_video_task(video_id: str):
         raise exc
 
     try:
-        video_details = video.download_video(video_id=video_id)
+        video_details = downloading.download_video(video_id=video_id)
     except DownloadError:
         video_object.status = VideoStatus.FAILED
         video_object.save()
