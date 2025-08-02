@@ -36,7 +36,7 @@ goButton.addEventListener('click', async function () {
 
     // Poll for video status updates
     try {
-        for (let attempt = 0; attempt < 120; attempt++) {
+        for (let attempt = 0; attempt < 600; attempt++) {
             response = await fetch(finalPollVideoUrl)
             data = await response.json()
             if (!data.success) {

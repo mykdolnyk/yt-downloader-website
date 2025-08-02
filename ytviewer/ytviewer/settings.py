@@ -134,6 +134,9 @@ LOGGING = {
         },
         'exclude_unavailable_video': {
             '()': 'ytviewer.logging_filters.ExcludeUnavailableVideoFilter'
+        },
+        'exclude_truncated_ids': {
+            '()': 'ytviewer.logging_filters.ExcludeTruncatedIdsFilter'
         }
     },
     
@@ -163,7 +166,7 @@ LOGGING = {
             'handlers': ['error_log', 'info_log', 'stdout'],
             'level': 'INFO',
             'propagate': False,
-            'filters': ['exclude_unavailable_video']
+            'filters': ['exclude_unavailable_video', 'exclude_truncated_ids']
         },
         'videos.tasks': {
             'handlers': ['error_log', 'info_log', 'stdout'],
