@@ -55,6 +55,12 @@ services:
       retries: 3
       start_period: 30s
 
+  memcached:
+    image: memcached:alpine
+    expose:
+      - "11211"
+    restart: unless-stopped
+
   nginx:
     image: nginx:latest
     ports:

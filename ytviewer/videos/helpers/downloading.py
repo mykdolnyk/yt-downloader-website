@@ -1,5 +1,6 @@
 import os
 from django.conf import settings
+from django.core.cache import cache
 import yt_dlp
 import datetime
 from django.utils import timezone
@@ -7,6 +8,13 @@ from logging import getLogger
 
 
 download_logger = getLogger(__name__)
+
+
+def downloading_hook(d: dict):
+    video_id = d['info_dict']['id']
+    percent = d['_percent']
+    
+    cache.set(f'progress:{video_id}', value=percent, timeout=600)
 
 
 def download_video(video_id:str) -> dict:
@@ -17,6 +25,7 @@ def download_video(video_id:str) -> dict:
         'outtmpl': f'{settings.MEDIA_ROOT}/videos/{video_id}.%(ext)s',
         'merge_output_format': 'mp4',
         'cookiefile': os.getenv('YTDLP_COOKIEFILE_PATH'),
+        'progress_hooks': [downloading_hook]
     }
 
     try:

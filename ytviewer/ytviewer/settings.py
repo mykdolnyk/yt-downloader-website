@@ -40,6 +40,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+        'LOCATION': f'{os.getenv('MEMCACHED_HOST')}:{os.getenv('MEMCACHED_PORT')}'
+    }
+}
+
 ROOT_URLCONF = 'ytviewer.urls'
 
 TEMPLATES = [

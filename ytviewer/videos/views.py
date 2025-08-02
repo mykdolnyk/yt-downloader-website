@@ -1,5 +1,6 @@
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render
+from django.core.cache import cache
 from .models import Video, VideoStatus
 from .helpers import url
 from .tasks import download_video_task
@@ -58,7 +59,17 @@ def queue_video(request: HttpRequest):
 def get_video_details(request: HttpRequest):
     """Checks if the video is ready, and returns the required details if so."""
     video_id = request.GET.get('video_id')
+    video_progress = cache.get(f'progress:{video_id}')
     
+    # If video progress exists in cache and it has not been completed yet:
+    if video_progress and int(video_progress) != 100:
+        return JsonResponse({
+            'success': True,
+            'status': VideoStatus.PENDING.name.lower(),
+            'percent': cache.get(f'progress:{video_id}')
+        })     
+
+    # Else retrieve data from DB
     try:
         video_object = Video.objects.get(ytid=video_id)
     except Video.DoesNotExist:
@@ -70,12 +81,14 @@ def get_video_details(request: HttpRequest):
     if video_object.status == VideoStatus.PENDING:
         return JsonResponse({
             'success': True,
-            'status': video_object.get_status_display() # Returns status as a string
+            'status': video_object.get_status_display(), # Returns status as a string
+            'percent': cache.get(f'progress:{video_id}')
         })        
     elif video_object.status == VideoStatus.COMPLETE:
         return JsonResponse({
             'success': True,
             'status': video_object.get_status_display(),
+            'percent': 100,
             'title': video_object.title,
             'id': video_object.ytid
         })

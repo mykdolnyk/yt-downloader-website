@@ -1,6 +1,7 @@
 const textField = document.getElementById('video_url')
 const goButton = document.getElementById('go_button');
-const throbber = document.getElementById('throbber');
+const loadingInfo = document.getElementById('loading-info');
+const progressBarFill = document.getElementById('progressbar-fill')
 const resultInfo = document.getElementById('result-info');
 
 const errorMessage = "<p>Something went wrong! Please double-check if the ID/URL you entered is correct.</p>"
@@ -14,12 +15,7 @@ goButton.addEventListener('click', async function () {
 
     let finalQueueVideoUrl = `${requestVideoUrl}?video_url=${userInput}`;
 
-    // Play the loading animation
-    textField.value = '';
-    throbber.style.display = 'block';
-    requestAnimationFrame(() => {
-        throbber.style.opacity = 1;
-    });
+    displayLoadingStart()
 
     // Queue the video
     try {
@@ -48,8 +44,13 @@ goButton.addEventListener('click', async function () {
                 break
             }
             if (data.status == 'pending') {
-                // Wait for 5s
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                // Update the progressbar and wait
+                console.log(parseFloat(progressBarFill.style.width))
+                console.log(parseFloat(data.percent))
+                if (parseFloat(data.percent) > parseFloat(progressBarFill.style.width)) {
+                    progressBarFill.style.width = `${data.percent}%`;
+                }
+                await new Promise(resolve => setTimeout(resolve, 500));
                 continue
             }
             if (data.status == 'complete') {
@@ -64,17 +65,31 @@ goButton.addEventListener('click', async function () {
     }
     
     // Fallback in case there is still no response once the polling is over
-    if (throbber.style.display != 'none') {
+    if (loadingInfo.style.display != 'none') {
         displayLoadingDone(errorMessage)
     }
 });
 
 
 function displayLoadingDone(newResultInfo) {
-    throbber.style.opacity = 0;
-    throbber.style.display = 'none';
+    loadingInfo.style.opacity = 0;
+    loadingInfo.style.display = 'none';
 
     resultInfo.style.opacity = 1;
-
+    resultInfo.style.display = 'flex';
     resultInfo.innerHTML = newResultInfo
+}
+
+function displayLoadingStart() {
+    textField.value = '';
+    progressBarFill.style.width = '0%';
+
+    resultInfo.style.opacity = 0;
+    resultInfo.style.display = 'none';
+    resultInfo.innerHTML = ''
+
+    loadingInfo.style.display = 'flex';
+    requestAnimationFrame(() => {
+        loadingInfo.style.opacity = 1;
+    });
 }

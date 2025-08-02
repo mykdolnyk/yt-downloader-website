@@ -1,6 +1,8 @@
 .venv
 __pycache__
 
+active.env
+
 *.sqlite3
 media
 staticfiles
