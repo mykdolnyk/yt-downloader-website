@@ -1,8 +1,21 @@
 import os
 from django.conf import settings
+from django.core.cache import cache
 import yt_dlp
 import datetime
 from django.utils import timezone
+from logging import getLogger
+
+
+download_logger = getLogger(__name__)
+
+
+def downloading_hook(d: dict):
+    video_id = d['info_dict']['id']
+    percent = d['_percent']
+    
+    cache.set(f'progress:{video_id}', value=percent, timeout=600)
+
 
 def download_video(video_id:str) -> dict:
     """Downloads the video and returns information about it."""
@@ -12,13 +25,18 @@ def download_video(video_id:str) -> dict:
         'outtmpl': f'{settings.MEDIA_ROOT}/videos/{video_id}.%(ext)s',
         'merge_output_format': 'mp4',
         'cookiefile': os.getenv('YTDLP_COOKIEFILE_PATH'),
+        'progress_hooks': [downloading_hook]
     }
 
-    # Download the video and get the details
-    with yt_dlp.YoutubeDL(ydl_options) as ydl:
-        video_info = ydl.extract_info(url=f'https://www.youtube.com/watch?v={video_id}', download=True)
-        full_video_filepath = ydl.prepare_filename(video_info)
-        rel_video_filepath = os.path.relpath(full_video_filepath, settings.MEDIA_ROOT)
+    try:
+        # Download the video and get the details
+        with yt_dlp.YoutubeDL(ydl_options) as ydl:
+            video_info = ydl.extract_info(url=f'https://www.youtube.com/watch?v={video_id}', download=True)
+            full_video_filepath = ydl.prepare_filename(video_info)
+            rel_video_filepath = os.path.relpath(full_video_filepath, settings.MEDIA_ROOT)
+    except Exception:
+        download_logger.exception(f'An error occured while trying to download a YouTube video with {video_id} ID.')
+        raise
     
     return {
         'success': True,

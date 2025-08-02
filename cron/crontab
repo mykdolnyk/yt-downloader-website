@@ -1,0 +1,1 @@
+0 * * * * root bash /app/cron/scripts/delete_videos.sh

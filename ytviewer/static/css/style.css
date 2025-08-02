@@ -83,6 +83,8 @@ video {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    min-width: 300px;
 }
 
 .fade-opacity {
@@ -116,6 +118,36 @@ video {
 
 .text-window a {
     color: rgb(25, 121, 194);
+}
+
+.loading-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 400px;
+}
+
+.progressbar {
+    height: 1.2em;
+    width: 100%;
+
+    background-color: rgb(218, 218, 218);
+
+    border-radius: 20px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--header-color);
+
+    overflow: hidden;
+}
+
+.progressbar-fill {
+    height: 100%;
+
+    background-color: rgb(114 162 209);
+    border-radius: inherit;
+
+    transition: width 0.6s ease-out;
 }
 
 /* Video Page */
