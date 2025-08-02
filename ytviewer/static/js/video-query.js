@@ -45,8 +45,6 @@ goButton.addEventListener('click', async function () {
             }
             if (data.status == 'pending') {
                 // Update the progressbar and wait
-                console.log(parseFloat(progressBarFill.style.width))
-                console.log(parseFloat(data.percent))
                 if (parseFloat(data.percent) > parseFloat(progressBarFill.style.width)) {
                     progressBarFill.style.width = `${data.percent}%`;
                 }

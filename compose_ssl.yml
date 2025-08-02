@@ -5,6 +5,8 @@ services:
     command: gunicorn ytviewer.wsgi:application --bind 0.0.0.0:8000 --workers=3
     volumes:
       - .:/app
+      - ./test.env:/app/active.env
+      - ./logs/ytviewer:/var/log/ytviewer
       - static_volume:/app/ytviewer/staticfiles
       - media_volume:/app/ytviewer/media
     expose:
@@ -22,6 +24,7 @@ services:
     entrypoint: ""
     volumes:
       - .:/app
+      - ./logs/ytviewer:/var/log/ytviewer
       - media_volume:/app/ytviewer/media
     env_file:
       - test.env
@@ -34,6 +37,8 @@ services:
     expose:
       - "5672"
       - "15672"
+    volumes:
+      - ./logs/rabbitmq:/var/log/rabbitmq
     env_file:
       - test.env
 
@@ -50,13 +55,20 @@ services:
       retries: 3
       start_period: 30s
 
+  memcached:
+    image: memcached:alpine
+    expose:
+      - "11211"
+    restart: unless-stopped
+
   nginx:
     image: nginx:latest
     ports:
       - "80:80"
       - "443:443"
     volumes: 
-      - ./nginx/default_ssl.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/default.conf:/etc/nginx/nginx.conf:ro
+      - ./logs/nginx:/var/log/nginx
       - static_volume:/app/ytviewer/staticfiles
       - media_volume:/app/ytviewer/media
       - certbot-var:/var/www/certbot
