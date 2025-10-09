@@ -15,15 +15,15 @@ You can also set up an SSL certificate for your website if you attach it to a do
 
 ## Features
 
-- ▶️ **YouTube video downloading functionality**
+-  **YouTube video downloading functionality**
 
-- ⏳ **Real-time progress bars**:
+-  **Real-time progress bars**:
   - A progress bar gets smoothly updated using the information retrieved from the module used to download video files.
-- 💣 **Automated deletion of old video files**:
+-  **Automated deletion of old video files**:
   - Implemented a custom Django `manage.py` command to clear up old files and entries. It is being triggered by a **shell** script that gets executed by cron.
-- 📃 **File logging system**:
+-  **File logging system**:
   - Logs from the website, Nginx, RabbitMQ are agregated in the `logs` folder of the project.
-- 🔐 **SSL support**:
+-  **SSL support**:
   - The project provides an ability to set up an SSL certificate for a website if it is connected to a domain name (using the [Let's Encrypt](https://letsencrypt.org/) certs). 
   
 
@@ -68,12 +68,14 @@ You can set up a free SSL certificate for your domain name using a Certbot. Howe
 
 You should modify a few lines of code before starting the project. 
 
-- [`nginx\default_ssl.conf`](nginx\default_ssl.conf)
-  - [Line 17](nginx\default_ssl.conf#L17): replace %DOMAINNAME% with your domain name;
-  - [Line 31](nginx\default_ssl.conf#L31): replace %DOMAINNAME% with your domain name;
+- [`nginx/default_ssl.conf`](nginx/default_ssl.conf)
+  - [Line 17](nginx/default_ssl.conf#L17): replace %DOMAINNAME% with your domain name;
+  - [Line 31](nginx/default_ssl.conf#L31): replace %DOMAINNAME% with your domain name;
 - [`compose_ssl.yml`](compose_ssl.yml)
   - [Line 86](compose_ssl.yml#L86): replace %DOMAINNAME% with your domain name;
   - [Line 86](compose_ssl.yml#L86): replace %EMAIL% with your email address.
+
+Keep in mind that you still need to configure the [`nginx/default_ssl.conf`](nginx/default_ssl.conf) file as usual to make it work with SSL.
   
 Once that is done, you can run the project using the following command:
 
